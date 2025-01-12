@@ -1,5 +1,6 @@
 package com.ecommerce.backend.controller;
 
+import com.ecommerce.backend.service.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,17 +12,20 @@ import com.ecommerce.backend.model.Category;
 
 @RestController
 public class CategoryController {
-    private List<Category> categories = new ArrayList<>();
+    private CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/api/public/categories")
     public List<Category> getAllCategories() {
-        return categories;
+        return categoryService.getAllCategories();
     }
 
     @PostMapping("/api/admin/category")
     public String createCategory(@RequestBody Category category) {
-        categories.add(category);
-        System.out.println("Category " + category.getCategoryName() + " added successfully");
+        categoryService.createCategory(category);
         return "Category added successfully";
     }
 }
