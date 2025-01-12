@@ -35,6 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Long categoryId, Category category) {
+        Category existingCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found to update"));
+
+        category.setCategoryId(categoryId);
+        return categoryRepository.save(category);
+
+        /*
         List<Category> categories = categoryRepository.findAll();
 
         Optional<Category> tempCategory = categories.stream()
@@ -49,10 +56,14 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
         }
+        */
     }
 
     @Override
     public String deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found to delete"));
+        /*
         List<Category> categories = categoryRepository.findAll();
 
         Category category = categories.stream()
@@ -60,6 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
 
+        */
 
 //        categories.remove(category);
         categoryRepository.delete(category);
