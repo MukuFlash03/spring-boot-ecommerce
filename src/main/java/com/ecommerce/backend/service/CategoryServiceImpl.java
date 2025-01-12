@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -23,6 +24,21 @@ public class CategoryServiceImpl implements CategoryService {
         category.setCategoryId(nextCategoryId++);
         categories.add(category);
         System.out.println("Category " + category.getCategoryName() + " added successfully");
+    }
+
+    @Override
+    public Category updateCategory(Long categoryId, Category category) {
+        Optional<Category> tempCategory = categories.stream()
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst();
+
+        if (tempCategory.isPresent()) {
+            Category existingCategory = tempCategory.get();
+            existingCategory.setCategoryName(category.getCategoryName());
+            return existingCategory;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
+        }
     }
 
     @Override
